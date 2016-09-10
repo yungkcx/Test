@@ -1,6 +1,7 @@
 #ifndef BIN_H
 #	define BIN_H
 
+#include <pthread.h>
 #include <sys/wait.h>
 #include <ctype.h>
 #include <error.h>
@@ -11,7 +12,6 @@
 #include <sys/types.h>
 #include <errno.h>
 #include <assert.h>
-#include <stdlib.h>
 #include <unistd.h>
 #include <time.h>
 #include <termio.h>
@@ -32,6 +32,10 @@
 #define PORT    6666
 #define LISTENQ 10
 #define SA      struct sockaddr
+
+struct test {
+	int a;
+};
 
 #define UNUSED(...) (void)(__VA_ARGS__)
 #define max(a, b) ({\
