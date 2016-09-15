@@ -1,6 +1,8 @@
 #ifndef BIN_H
 #	define BIN_H
 
+#include <syslog.h>
+#include <sys/resource.h>
 #include <pthread.h>
 #include <sys/wait.h>
 #include <ctype.h>
@@ -14,6 +16,7 @@
 #include <assert.h>
 #include <unistd.h>
 #include <time.h>
+#include <sys/time.h>
 #include <termio.h>
 #include <signal.h>
 #include <sys/epoll.h>
@@ -29,7 +32,7 @@
 #include "lxnp.h"
 
 #define MAXLINE 1024
-#define PORT    6666
+#define PORT    "33333"
 #define LISTENQ 10
 #define SA      struct sockaddr
 
