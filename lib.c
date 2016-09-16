@@ -70,6 +70,7 @@ ssize_t readn(int fd, void *buf, size_t n)
 	while (1) {
 		if ((nread = read(fd, buf, n)) < 0) {
 			if (errno == EINTR) {
+				perror("Error");
 				nread = 0;
 			} else {
 				perror("readn error");
