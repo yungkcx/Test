@@ -1,6 +1,22 @@
 #include "bin.h"
 
-const char *sock_ntop(const struct sockaddr *sa, socklen_t len)
+/* return a addrinfo pointer and connect by yourself */
+struct addrinfo *host_serv(const char *host, const char *port,
+		int family, int socktype)
+{
+	int n;
+	struct addrinfo hints, *res;
+
+	memset(&hints, 0, sizeof(struct addrinfo));
+	hints.ai_flags = AI_CANONNAME; /* canonical name */
+	hints.ai_family = family;  /* AF_UNSPEC, AF_INET, etc. */
+	hints.ai_socktype = socktype;  /* 0, SOCK_STREAM, SOCK_DGRAM, etc. */
+	if ((n = getaddrinfo(host, port, &hints, &res)) != 0)
+		return NULL;
+	return res;
+}
+
+const char *sock_ntop(const struct sockaddr *sa)
 {
 	static char str[45]; /* X:X:X:X:X:X:a.b.c.d, so it is 45 characters */
 	char portstr[8];
@@ -23,8 +39,10 @@ const char *sock_ntop(const struct sockaddr *sa, socklen_t len)
 			return str;
 		}
 		default:
-			return NULL;
+			snprintf(str, sizeof(str), "sock_ntop: unknown AF_xxx: %d", sa->sa_family);
+			return str;
 	}
+	return NULL;
 }
 
 /* handle SIGINTR of accept */

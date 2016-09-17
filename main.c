@@ -1,28 +1,15 @@
 #include "bin.h"
 
-#define MAX 100
+#define MAX 10000
 
-void sig_alrm(int signo)
+int main(int argc, char **argv)
 {
-	return;
-}
+    int fd, n;
+    struct ifreq ifr;
 
-int main()
-{
-	int listenfd, connfd, n;
-	char buf[MAX];
-	struct sockaddr cli;
-	socklen_t len;
-	struct sigaction sa;
+    fd = udp_connect(argv[1], argv[2]);
+    ioctl(fd, SIOCGIFMTU, &ifr);
+    printf("%d\n", ifr.ifr_ifru.ifru_mtu);
 
-	sa.sa_flags = 0;
-	sa.sa_handler = sig_alrm;
-	sigaction(SIGALRM, &sa, NULL);
-	listenfd = tcp_connect("localhost", PORT);
-	alarm(1);
-	recv(listenfd, buf, MAX, 0);
-	if (errno == EINTR)
-		perror("eintr");
-
-	return 0;
+    return 0;
 }

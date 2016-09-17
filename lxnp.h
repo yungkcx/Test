@@ -1,7 +1,10 @@
 #ifndef MYUNP_H
 #	define MYUNP_H
 
-const char *sock_ntop(const struct sockaddr *sa, socklen_t len);
+struct addrinfo *host_serv(const char *host, const char *port,
+		int family, int socktype);
+
+const char *sock_ntop(const struct sockaddr *sa);
 
 int accept_e(int sockfd, struct sockaddr *addr, socklen_t *addrlenp);
 

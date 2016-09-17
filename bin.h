@@ -1,6 +1,10 @@
 #ifndef BIN_H
 #	define BIN_H
 
+#include <linux/sockios.h>
+#include <net/if.h>
+#include <linux/netlink.h>
+#include <ifaddrs.h>
 #include <syslog.h>
 #include <sys/resource.h>
 #include <pthread.h>
