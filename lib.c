@@ -32,9 +32,10 @@ const char *sock_ntop(const struct sockaddr *sa)
 		}
 		case AF_INET6: {
 			struct sockaddr_in6 *sin6 = (struct sockaddr_in6 *) sa;
-			if (inet_ntop(AF_INET6, &sin6->sin6_addr, str, sizeof(str)) == NULL)
+            str[0] = '[';
+			if (inet_ntop(AF_INET6, &sin6->sin6_addr, str + 1, sizeof(str) - 1) == NULL)
 				return NULL;
-			snprintf(portstr, sizeof(portstr), ":%hu", ntohs(sin6->sin6_port));
+			snprintf(portstr, sizeof(portstr), "]:%hu", ntohs(sin6->sin6_port));
 			strcat(str, portstr);
 			return str;
 		}
@@ -55,7 +56,7 @@ int accept_e(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 			if (errno == EINTR)
 				continue;
 			else
-				perror("lxaccept error");
+				perror("accept error");
 		} else {
 			return connfd;
 		}
@@ -88,7 +89,6 @@ ssize_t readn(int fd, void *buf, size_t n)
 	while (1) {
 		if ((nread = read(fd, buf, n)) < 0) {
 			if (errno == EINTR) {
-				perror("Error");
 				nread = 0;
 			} else {
 				perror("readn error");
@@ -257,4 +257,34 @@ int udp_server(const char *host,
 	freeaddrinfo(ressave);
 
 	return fd;
+}
+
+/* error handler functions */
+void errsys(const char *fmt, ...)
+{
+    va_list ap;
+
+    va_start(ap, fmt);
+    error(0, errno, fmt, ap);
+    va_end(ap);
+    exit(1);
+}
+
+void errmsg(const char *fmt, ...)
+{
+    va_list ap;
+
+    va_start(ap, fmt);
+    error(0, 0, fmt, ap);
+    va_end(ap);
+}
+
+void errquit(const char *fmt, ...)
+{
+    va_list ap;
+
+    va_start(ap, fmt);
+    error(0, 0, fmt, ap);
+    va_end(ap);
+    exit(0);
 }

@@ -1,6 +1,8 @@
 #ifndef BIN_H
 #	define BIN_H
 
+#include <sys/un.h>
+#include <linux/if_link.h>
 #include <linux/sockios.h>
 #include <net/if.h>
 #include <linux/netlink.h>
@@ -32,17 +34,15 @@
 #include <sys/stat.h>
 #include <fcntl.h>
 #include <netdb.h>
-
+#include <stdarg.h>
 #include "lxnp.h"
+
+#define SA struct sockaddr
 
 #define MAXLINE 1024
 #define PORT    "33333"
 #define LISTENQ 10
-#define SA      struct sockaddr
-
-struct test {
-	int a;
-};
+#define PATH    "/tmp/gittest"
 
 #define UNUSED(...) (void)(__VA_ARGS__)
 #define max(a, b) ({\
