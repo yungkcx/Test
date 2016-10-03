@@ -1,4 +1,4 @@
-#include "bin.h"
+#include "all.h"
 
 /* return a addrinfo pointer and connect by yourself */
 struct addrinfo *host_serv(const char *host, const char *port,
