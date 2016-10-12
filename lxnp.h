@@ -21,8 +21,9 @@ int udp_connect(const char *host, const char *port);
 
 int udp_server(const char *host, const char *port, socklen_t *addrlenp);
 
-void errsys(const char *fmt, ...);
-void errmsg(const char *fmt, ...);
-void errquit(const char *fmt, ...);
+void eret(const char *fmt, ...);
+void esys(const char *fmt, ...);
+void emsg(const char *fmt, ...);
+void equit(const char *fmt, ...);
 
 #endif

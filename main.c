@@ -1,13 +1,23 @@
 #include "all.h"
 
-int line = 1;
-int main()
+void sig_handler(int);
+char wdbuf[MAXPATHLEN];
+
+int main(int argc, char **argv)
 {
-    printf("%*s\n",
-            7-(line>4? line-4: 4-line),
-            "*******"+2*(line>4? line-4:4-line)
-          );
-    if(++line != 8)
-        main();
-    return 0;
+    printf("%lu\n", SSIZE_MAX);
+
+    exit(0);
+}
+
+void sig_handler(int signo)
+{
+    switch (signo) {
+    case SIGINT:
+        printf("Interrupt\n%s%% ", getcwd(wdbuf, MAXPATHLEN));
+        fflush(stdout);
+        break;
+    default:
+        ;
+    }
 }

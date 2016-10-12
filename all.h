@@ -13,6 +13,7 @@
 #include <netinet/ip_icmp.h>
 #include <netinet/in.h>
 
+#include <sys/param.h>
 #include <sys/ipc.h>
 #include <sys/un.h>
 #include <sys/resource.h>
@@ -29,6 +30,8 @@
 
 #include <arpa/inet.h>
 
+#include <aio.h>
+#include <dirent.h>
 #include <ifaddrs.h>
 #include <syslog.h>
 #include <pthread.h>
@@ -63,7 +66,8 @@
 		typeof(a) _max1 = (a);\
 		typeof(b) _max2 = (b);\
 		_max1 > _max2 ? _max1 : _max2;})
-
 #define array(T, N) typeof(T [N])
+#define STRCMP(a, R, b) (strcmp(a, b) R 0)
+#define STRNCMP(a, R, b, n) (strncmp(a, b, n) R 0)
 
 #endif

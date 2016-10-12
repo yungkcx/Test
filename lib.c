@@ -56,7 +56,7 @@ int accept_e(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 			if (errno == EINTR)
 				continue;
 			else
-				perror("accept error");
+				esys("accept error");
 		} else {
 			return connfd;
 		}
@@ -72,8 +72,7 @@ ssize_t writen(int fd, const void *buf, size_t n)
 			if (errno == EINTR) {
 				nwrite = 0;
 			} else {
-				perror("writen error");
-				return -1;
+				esys("writen error");
 			}
 		} else {
 			break;
@@ -91,8 +90,7 @@ ssize_t readn(int fd, void *buf, size_t n)
 			if (errno == EINTR) {
 				nread = 0;
 			} else {
-				perror("readn error");
-				return -1;
+				esys("readn error: %d, tid: %ld", fd, pthread_self());
 			}
 		} else {
 			break;
@@ -123,11 +121,11 @@ int tcp_listen(const char *host,
 		if (fd < 0)
 			continue;
 		if (setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &on, sizeof(on)) < 0)
-			perror("setsockopt error");
+			esys("setsockopt error");
 		if (bind(fd, res->ai_addr, res->ai_addrlen) == 0)
 			break;
 		if (close(fd) < 0)
-			perror("close error");
+			esys("close error");
 	} while ((res = res->ai_next) != NULL);
 
 	if (res == NULL)
@@ -162,7 +160,7 @@ int tcp_connect(const char *host, const char *port)
 		if (connect(fd, res->ai_addr, res->ai_addrlen) == 0)
 			break;         /* Success */
 		if (close(fd) < 0)
-			perror("close error");
+			esys("close error");
 	} while ((res = res->ai_next) != NULL);
 
 	if (res == NULL)
@@ -246,7 +244,7 @@ int udp_server(const char *host,
 		if (bind(fd, res->ai_addr, res->ai_addrlen) == 0)
 			break;
 		if (close(fd) < 0)
-			perror("close error");
+			esys("close error");
 	} while ((res = res->ai_next) != NULL);
 
 	if (res == NULL)
@@ -260,31 +258,55 @@ int udp_server(const char *host,
 }
 
 /* error handler functions */
-void errsys(const char *fmt, ...)
+static void edoit(int status, const char *fmt, va_list ap)
 {
-    va_list ap;
+    int errno_save, n;
+    char buf[MAXLINE + 1];
 
-    va_start(ap, fmt);
-    error(0, errno, fmt, ap);
-    va_end(ap);
-    exit(1);
+    errno_save = errno;
+    vsnprintf(buf, MAXLINE, fmt, ap);
+    n = strlen(buf);
+    if (status)
+        snprintf(buf + n, MAXLINE - n, ": %s", strerror(errno_save));
+    strcat(buf, "\n");
+    fputs(buf, stderr);
+    fflush(stderr);
 }
 
-void errmsg(const char *fmt, ...)
+void equit(const char *fmt, ...)
 {
     va_list ap;
 
     va_start(ap, fmt);
-    error(0, 0, fmt, ap);
+    edoit(0, fmt, ap);
+    va_end(ap);
+    exit(EXIT_SUCCESS);
+}
+
+void esys(const char *fmt, ...)
+{
+    va_list ap;
+
+    va_start(ap, fmt);
+    edoit(1, fmt, ap);
+    va_end(ap);
+    exit(EXIT_FAILURE);
+}
+
+void eret(const char *fmt, ...)
+{
+    va_list ap;
+
+    va_start(ap, fmt);
+    edoit(1, fmt, ap);
     va_end(ap);
 }
 
-void errquit(const char *fmt, ...)
+void emsg(const char *fmt, ...)
 {
     va_list ap;
 
     va_start(ap, fmt);
-    error(0, 0, fmt, ap);
+    edoit(0, fmt, ap);
     va_end(ap);
-    exit(0);
 }
