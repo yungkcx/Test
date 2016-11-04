@@ -1,5 +1,62 @@
 #include "all.h"
 
+int set_fl(int fd, int flags)
+{
+    /* Cant't be used to set O_SYNC or O_DSYNC. */
+    int val;
+    if ((val = fcntl(fd, F_GETFL, 0)) < 0)
+        return val;
+    val |= flags;
+    return fcntl(fd, F_SETFL, val);
+}
+
+int clr_fl(int fd, int flags)
+{
+    int val;
+    if ((val = fcntl(fd, F_GETFL, 0)) < 0)
+        return val;
+    val &= ~flags;
+    return fcntl(fd, F_SETFL, val);
+}
+
+unsigned parse_hex4(const char *p)
+{
+    int i;
+    unsigned u;
+
+    u = 0;
+    for (i = 0; i < 4; ++i) {
+        u <<= 4;
+        if (isdigit(p[i]))
+            u += p[i] - '0';
+        else if (p[i] <= 'f' && p[i] >= 'a')
+            u += p[i] - 'a' + 10;
+        else
+            return 0;
+    }
+    return u;
+}
+
+void encode_utf8(char *c, unsigned u)
+{
+    assert(u >= 0x0000 && u <= 0x10ffff);
+    if (u <= 0x007f)
+        c[0] = (char) u;
+    else if (u <= 0x07ff) {
+        c[0] = (0xc0 | ((u >>  6) & 0xff));
+        c[1] = (0x80 | ( u        & 0x3f));
+    } else if (u <= 0xffff) {
+        c[0] = (0xe0 | ((u >> 12) & 0xff));
+        c[1] = (0x80 | ((u >>  6) & 0x3f));
+        c[2] = (0x80 | ( u        & 0x3f));
+    } else { /* 0x10000 ~ 0x10ffff */
+        c[0] = (0xf0 | ((u >> 18) & 0xff));
+        c[1] = (0x80 | ((u >> 12) & 0x3f));
+        c[2] = (0x80 | ((u >>  6) & 0x3f));
+        c[3] = (0x80 | ( u        & 0x3f));
+    }
+}
+
 /* return a addrinfo pointer and connect by yourself */
 struct addrinfo *host_serv(const char *host, const char *port,
 		int family, int socktype)
@@ -46,7 +103,7 @@ const char *sock_ntop(const struct sockaddr *sa)
 	return NULL;
 }
 
-/* handle SIGINTR of accept */
+/* handle SIGINTR for accept */
 int accept_e(int sockfd, struct sockaddr *addr, socklen_t *addrlen)
 {
 	int connfd;
