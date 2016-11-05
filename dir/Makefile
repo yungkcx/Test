@@ -1,5 +1,5 @@
-CC=clang
-CFLAGS= -Wall -Wno-unused -std=gnu11 -I. -g
+CC=gcc
+CFLAGS= -Wall -Wno-unused -std=gnu11 -I.
 LIBS= -lpthread -lrt
 LIBFILES= lib/*.c
 
