@@ -1,6 +1,7 @@
 #ifndef BIN_H
 #	define BIN_H
 
+#include <linux/limits.h>
 #include <linux/tcp.h>
 #include <linux/udp.h>
 #include <linux/sockios.h>
@@ -13,6 +14,7 @@
 #include <netinet/ip_icmp.h>
 #include <netinet/in.h>
 
+#include <sys/eventfd.h>
 #include <sys/times.h>
 #include <sys/param.h>
 #include <sys/ipc.h>
@@ -31,10 +33,12 @@
 
 #include <arpa/inet.h>
 
+#include <stdbool.h>
 #include <stddef.h>
 #include <stdio.h>
 #include <stdarg.h>
 #include <stdlib.h>
+#include <limits.h>
 
 #include <termios.h>
 #include <setjmp.h>
@@ -65,6 +69,21 @@
 #include <tar.h>
 
 #define SA struct sockaddr
+
+#define CREATE_ARRAY(a, n, max)\
+    do {\
+        srand(time(NULL));\
+        int i = n - 1;\
+        for (; i >= 0; --i)\
+            a[i] = rand() % max;\
+    } while (0)
+
+#define CREATE_ORDER_ARRAY(a, n)\
+    do {\
+        int i;\
+        for (i = 0; i < n; ++i)\
+            a[i] = i + 1;\
+    } while (0)
 
 #define MAXLINE 1024
 #define PORT    "33333"

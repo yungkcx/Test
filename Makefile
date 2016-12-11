@@ -1,10 +1,12 @@
+CXX=clang++
 CC=clang
-CFLAGS= -Wall -Wno-unused -std=gnu11 -I. -g
+CXXFLAGS= -Wall -Wno-missing-braces -Wmissing-field-initializers -std=gnu++11 -I. -g
+CFLAGS= -Wall -std=gnu11 -I. -g
 LIBS= -lpthread -lrt
 LIBFILES= lib/*.c
 
-main: main.c ${LIB_DIR}
-	${CC} $< ${LIBFILES} ${CFLAGS} ${LIBS} 
+main: main.c
+	${CC} $^ ${LIBFILES} ${CFLAGS} ${LIBS}
 
-clean:
-	rm main *.o
+cpp: main.cpp
+	${CXX} $^ ${CXXFLAGS} ${LIBS}
