@@ -1,6 +1,8 @@
 #ifndef BIN_H
 #	define BIN_H
 
+#include <zmq.h>
+
 #include <linux/limits.h>
 #include <linux/tcp.h>
 #include <linux/udp.h>
@@ -68,6 +70,8 @@
 #include <netdb.h>
 #include <tar.h>
 
+#include "lib/lib.h"
+
 #define SA struct sockaddr
 
 #define CREATE_ARRAY(a, n, max)\
@@ -75,7 +79,7 @@
         srand(time(NULL));\
         int i = n - 1;\
         for (; i >= 0; --i)\
-            a[i] = rand() % max;\
+            a[i] = rand() % (max);\
     } while (0)
 
 #define CREATE_ORDER_ARRAY(a, n)\
@@ -85,10 +89,25 @@
             a[i] = i + 1;\
     } while (0)
 
+#define PRINT_ARRAY(a, n, format)\
+    do {\
+        for (int i = 0; i < n; ++i)\
+            printf(format, a[i]);\
+        putchar('\n');\
+    } while (0)
+
+#define SWAP(a, b)\
+    do {\
+        typeof(a) t = b;\
+        b = a;\
+        a = t;\
+    } while (0)
+
+#define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
+
 #define MAXLINE 1024
 #define PORT    "33333"
 #define LISTENQ 10
-#define PATH    "/tmp/gittest"
 
 #define UNUSED(v)            (void)(v);
 #define max(a, b) ({\
@@ -99,28 +118,5 @@
 #define STRCMP(a, R, b)      (strcmp(a, b) R 0)
 #define STRNCMP(a, R, b, n)  (strncmp(a, b, n) R 0)
 #define debug(M, ...)        fprintf(stderr, "DEBUG %s (in function '%s':%d: " M "\n", __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);
-
-extern unsigned parse_hex4(const char *p);
-extern void encode_utf8(char *c, unsigned u);
-
-extern struct addrinfo *host_serv(const char *host, const char *port, int family, int socktype);
-extern const char *sock_ntop(const struct sockaddr *sa);
-extern int tcp_listen(const char *host, const char *port, socklen_t *addrlenp);
-extern int tcp_connect(const char *host, const char *port);
-extern int udp_client(const char *host, const char *port, struct sockaddr **saptr, socklen_t *len);
-extern int udp_connect(const char *host, const char *port);
-extern int udp_server(const char *host, const char *port, socklen_t *addrlenp);
-
-extern int accept_e(int sockfd, struct sockaddr *addr, socklen_t *addrlenp);
-extern ssize_t writen(int fd, const void *buf, size_t n);
-extern ssize_t readn(int fd, void *buf, size_t n);
-
-extern void eret(const char *fmt, ...);
-extern void esys(const char *fmt, ...);
-extern void emsg(const char *fmt, ...);
-extern void equit(const char *fmt, ...);
-
-extern int set_fl(int fd, int flags);
-extern int clr_fl(int fd, int flags);
 
 #endif

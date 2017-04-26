@@ -1,4 +1,30 @@
-#include "all.h"
+#include "../all.h"
+
+void pr_mask(const char* str)
+{
+    sigset_t sigset;
+    int errno_save;
+
+    errno_save = errno;
+    if (sigprocmask(0, NULL, &sigset) < 0) {
+        eret("sigprocmask error");
+    } else {
+        printf("%s", str);
+        if (sigismember(&sigset, SIGINT))
+            printf(" SIGINT");
+        if (sigismember(&sigset, SIGQUIT))
+            printf(" SIGQUIT");
+        if (sigismember(&sigset, SIGUSR1))
+            printf(" SIGUSR1");
+        if (sigismember(&sigset, SIGALRM))
+            printf(" SIGALRM");
+
+        /* remaining signals can go here */
+
+        puts("");
+    }
+    errno = errno_save;
+}
 
 int set_fl(int fd, int flags)
 {
@@ -33,6 +59,32 @@ unsigned parse_hex4(const char *p)
             u += p[i] - 'a' + 10;
         else
             return 0;
+    }
+    return u;
+}
+
+unsigned decode_utf8(char* ch)
+{
+    unsigned u = 0;
+    unsigned hex = *ch;
+    if (hex <= 0xdf) {
+        u |= (*ch & 0x1f);
+        u <<= 6, ch++;
+        u |= (*ch & 0x3f);
+    } else if (hex <= 0xef) {
+        u |= (*ch & 0x0f);
+        u <<= 6, ch++;
+        u |= (*ch & 0x3f);
+        u <<= 6, ch++;
+        u |= (*ch & 0x3f);
+    } else if (hex <= 0xf7) {
+        u |= (*ch & 0x07);
+        u <<= 6, ch++;
+        u |= (*ch & 0x3f);
+        u <<= 6, ch++;
+        u |= (*ch & 0x3f);
+        u <<= 6, ch++;
+        u |= (*ch & 0x3f);
     }
     return u;
 }
@@ -147,7 +199,7 @@ ssize_t readn(int fd, void *buf, size_t n)
 			if (errno == EINTR) {
 				nread = 0;
 			} else {
-				esys("readn error: %d, tid: %ld", fd, pthread_self());
+				esys("readn error: %d", fd);
 			}
 		} else {
 			break;

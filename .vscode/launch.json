@@ -1,6 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
+        
         {
             "name": "C++ Launch",
             "type": "cppdbg",
@@ -12,13 +13,27 @@
             "environment": [],
             "externalConsole": true,
             "linux": {
-                "MIMode": "gdb"
+                "MIMode": "gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    }
+                ]
             },
             "osx": {
                 "MIMode": "lldb"
             },
             "windows": {
-                "MIMode": "gdb"
+                "MIMode": "gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    }
+                ]
             }
         },
         {
@@ -28,13 +43,27 @@
             "program": "enter program name, for example ${workspaceRoot}/a.out",
             "processId": "${command.pickProcess}",
             "linux": {
-                "MIMode": "gdb"
+                "MIMode": "gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    }
+                ]
             },
             "osx": {
                 "MIMode": "lldb"
             },
             "windows": {
-                "MIMode": "gdb"
+                "MIMode": "gdb",
+                "setupCommands": [
+                    {
+                        "description": "Enable pretty-printing for gdb",
+                        "text": "-enable-pretty-printing",
+                        "ignoreFailures": true
+                    }
+                ]
             }
         }
     ]
