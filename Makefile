@@ -1,7 +1,16 @@
-include Makefile.define
+CC=gcc
+CFLAGS= -Wall -std=gnu11 -L. -g
+CSTATICFLAGS= ${CFLAGS} -static-libgcc -static
+LIBS= -lpthread -lzmq -lm
+TESTLIB=libtl.a
+TESTPROGRAM=test statictest
+LIBDIR=lib
+AR=ar
+ARFLAGS= rv
+RM=rm -f
 
 all: main.o testlib
-	${CC} $< ${CFLAGS} ${LIBS}
+	${CC} $< ${CFLAGS} ${LIBS} ${TESTLIB}
 
 test: test.o testlib
 	${CC} $< -o $@ ${CFLAGS} ${LIBS}

@@ -117,6 +117,9 @@
 #define array(T, N)          typeof(T [N])
 #define STRCMP(a, R, b)      (strcmp(a, b) R 0)
 #define STRNCMP(a, R, b, n)  (strncmp(a, b, n) R 0)
-#define debug(M, ...)        fprintf(stderr, "DEBUG %s (in function '%s':%d: " M "\n", __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__);
+
+#define debug(M, ...)        fprintf(stderr, "DEBUG %s (in function '%s':%d: " M "\n", __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define handle_err(en, msg)\
+    do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
 
 #endif

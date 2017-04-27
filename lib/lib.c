@@ -379,7 +379,6 @@ static void edoit(int status, const char *fmt, va_list ap)
         snprintf(buf + n, MAXLINE - n, ": %s", strerror(errno_save));
     strcat(buf, "\n");
     fputs(buf, stderr);
-    fflush(stderr);
 }
 
 void equit(const char *fmt, ...)

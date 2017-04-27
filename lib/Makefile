@@ -1,4 +1,10 @@
-include ../Makefile.define
+CC=gcc
+CFLAGS= -Wall -std=gnu11 -L. -g
+CSTATICFLAGS= ${CFLAGS} -static-libgcc -static
+TESTLIB=libtl.a
+AR=ar
+ARFLAGS= rv
+RM=rm -f
 
 LIBOBJS=lib.o
 STATIC_LIBOBJS=staticlib.o
