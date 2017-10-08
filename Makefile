@@ -1,7 +1,7 @@
 CC=gcc
 CFLAGS= -Wall -std=gnu11 -L. -g
 CSTATICFLAGS= ${CFLAGS} -static-libgcc -static
-LIBS= -lpthread -lzmq -lm
+LIBS= -lpthread -lzmq -lm -lcrypto -lssl
 TESTLIB=libtl.a
 TESTPROGRAM=test statictest
 LIBDIR=lib

@@ -2,6 +2,12 @@
 #	define BIN_H
 
 #include <zmq.h>
+#include <openssl/rsa.h>
+#include <openssl/pem.h>
+#include <openssl/ssl.h>
+#include <openssl/evp.h>
+#include <openssl/bio.h>
+#include <openssl/err.h>
 
 #include <linux/limits.h>
 #include <linux/tcp.h>
@@ -69,6 +75,7 @@
 #include <fcntl.h>
 #include <netdb.h>
 #include <tar.h>
+#include <sched.h>
 
 #include "lib/lib.h"
 

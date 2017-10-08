@@ -1,4 +1,4 @@
-#include "all.h"
+#include "../all.h"
 
 typedef struct stage_tag {
     pthread_mutex_t   mutex;

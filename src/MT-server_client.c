@@ -1,4 +1,4 @@
-#include "all.h"
+#include "../all.h"
 
 #define CLIENT_THREADS  4
 #define REQ_READ        1
