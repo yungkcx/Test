@@ -1,5 +1,5 @@
 #ifndef BIN_H
-#	define BIN_H
+#define BIN_H
 
 #include <zmq.h>
 #include <openssl/rsa.h>
@@ -81,52 +81,62 @@
 
 #define SA struct sockaddr
 
-#define CREATE_ARRAY(a, n, max)\
-    do {\
-        srand(time(NULL));\
-        int i = n - 1;\
-        for (; i >= 0; --i)\
-            a[i] = rand() % (max);\
+#define CREATE_ARRAY(a, n, max)    \
+    do                             \
+    {                              \
+        srand(time(NULL));         \
+        int i = n - 1;             \
+        for (; i >= 0; --i)        \
+            a[i] = rand() % (max); \
     } while (0)
 
-#define CREATE_ORDER_ARRAY(a, n)\
-    do {\
-        int i;\
-        for (i = 0; i < n; ++i)\
-            a[i] = i + 1;\
+#define CREATE_ORDER_ARRAY(a, n) \
+    do                           \
+    {                            \
+        int i;                   \
+        for (i = 0; i < n; ++i)  \
+            a[i] = i + 1;        \
     } while (0)
 
-#define PRINT_ARRAY(a, n, format)\
-    do {\
-        for (int i = 0; i < n; ++i)\
-            printf(format, a[i]);\
-        putchar('\n');\
+#define PRINT_ARRAY(a, n, format)   \
+    do                              \
+    {                               \
+        for (int i = 0; i < n; ++i) \
+            printf(format, a[i]);   \
+        putchar('\n');              \
     } while (0)
 
-#define SWAP(a, b)\
-    do {\
-        typeof(a) t = b;\
-        b = a;\
-        a = t;\
+#define SWAP(a, b)       \
+    do                   \
+    {                    \
+        typeof(a) t = b; \
+        b = a;           \
+        a = t;           \
     } while (0)
 
 #define ARRAY_SIZE(arr) (sizeof(arr) / sizeof(arr[0]))
 
 #define MAXLINE 1024
-#define PORT    "33333"
+#define BUFLEN 1024
+#define PORT "33333"
 #define LISTENQ 10
 
-#define UNUSED(v)            (void)(v);
+#define UNUSED(v) (void)(v);
 #define max(a, b) ({\
 		typeof(a) _max1 = (a);\
 		typeof(b) _max2 = (b);\
-		_max1 > _max2 ? _max1 : _max2;})
-#define array(T, N)          typeof(T [N])
-#define STRCMP(a, R, b)      (strcmp(a, b) R 0)
-#define STRNCMP(a, R, b, n)  (strncmp(a, b, n) R 0)
+		_max1 > _max2 ? _max1 : _max2; })
+#define array(T, N) typeof(T[N])
+#define STRCMP(a, R, b) (strcmp(a, b) R 0)
+#define STRNCMP(a, R, b, n) (strncmp(a, b, n) R 0)
 
-#define debug(M, ...)        fprintf(stderr, "DEBUG %s (in function '%s':%d: " M "\n", __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
-#define handle_err(en, msg)\
-    do { errno = en; perror(msg); exit(EXIT_FAILURE); } while (0)
+#define debug(M, ...) fprintf(stderr, "DEBUG %s in function '%s':%d: " M "\n", __FILE__, __FUNCTION__, __LINE__, ##__VA_ARGS__)
+#define handle_err(en, msg) \
+    do                      \
+    {                       \
+        errno = en;         \
+        perror(msg);        \
+        exit(EXIT_FAILURE); \
+    } while (0)
 
 #endif

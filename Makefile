@@ -1,7 +1,8 @@
 CC=gcc
 CFLAGS= -Wall -std=gnu11 -L. -g
 CSTATICFLAGS= ${CFLAGS} -static-libgcc -static
-LIBS= -lpthread -lzmq -lm -lcrypto -lssl
+#LIBS= -lpthread -lzmq -lm -lcrypto -lssl
+LIBS=
 TESTLIB=libtl.a
 TESTPROGRAM=test statictest
 LIBDIR=lib
@@ -13,7 +14,7 @@ all: main.o testlib
 	${CC} $< ${CFLAGS} ${LIBS} ${TESTLIB}
 
 test: test.o testlib
-	${CC} $< -o $@ ${CFLAGS} ${LIBS}
+	${CC} $< -o $@ ${CFLAGS} ${LIBS} ${TESTLIB}
 
 testlib:
 	cd ${LIBDIR} && make
